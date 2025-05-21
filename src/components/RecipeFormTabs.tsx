@@ -57,8 +57,8 @@ export function RecipeFormTabs({ onSubmit, isLoading }: RecipeFormTabsProps) {
   return (
     <Tabs defaultValue="description" className="w-full max-w-xl mx-auto">
       <TabsList className="grid w-full grid-cols-2 mb-6">
-        <TabsTrigger value="description">Describe a Recipe</TabsTrigger>
-        <TabsTrigger value="ingredients">Use My Ingredients</TabsTrigger>
+        <TabsTrigger value="description">Let's cook the Recipe</TabsTrigger>
+        <TabsTrigger value="ingredients">Use Your Ingredients</TabsTrigger>
       </TabsList>
       <TabsContent value="description">
         <Form {...descriptionForm}>
@@ -87,7 +87,7 @@ export function RecipeFormTabs({ onSubmit, isLoading }: RecipeFormTabsProps) {
                 <FormItem>
                   <FormLabel className="text-base">Any dietary preferences or restrictions?</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., vegetarian, gluten-free, dairy-free" {...field} className="bg-background" />
+                    <Input placeholder="e.g., vegetarian, non-vegetarian,oil free,dairy-free" {...field} className="bg-background" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
