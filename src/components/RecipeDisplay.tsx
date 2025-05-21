@@ -1,19 +1,19 @@
-import type { GenerateRecipeOutput } from '@/ai/flows/generate-recipe';
-import type { GenerateRecipeFromIngredientsOutput } from '@/ai/flows/generate-recipe-from-ingredients';
+
+import type { RecipeDataWithImage } from './RecipeGenerator'; // Updated import
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { ClipboardList, ListOrdered } from 'lucide-react';
+import { ClipboardList, ListOrdered, Image as ImageIcon, RefreshCw } from 'lucide-react'; // Added ImageIcon, RefreshCw
 import Image from 'next/image';
-
-type RecipeData = GenerateRecipeOutput | GenerateRecipeFromIngredientsOutput;
+import { Skeleton } from '@/components/ui/skeleton'; // Added Skeleton
 
 interface RecipeDisplayProps {
-  recipe: RecipeData;
+  recipe: RecipeDataWithImage;
+  isLoadingImage?: boolean;
 }
 
-export function RecipeDisplay({ recipe }: RecipeDisplayProps) {
+export function RecipeDisplay({ recipe, isLoadingImage }: RecipeDisplayProps) {
   const instructionsArray = typeof recipe.instructions === 'string'
-    ? recipe.instructions.split('\\n').map(line => line.trim()).filter(line => line !== '')
+    ? recipe.instructions.split(/\\n|\n/).map(line => line.trim()).filter(line => line !== '')
     : recipe.instructions.map(line => line.trim()).filter(line => line !== '');
 
   return (
@@ -25,15 +25,29 @@ export function RecipeDisplay({ recipe }: RecipeDisplayProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="mb-6">
-           <Image
-            src="https://placehold.co/600x400.png"
-            alt={recipe.recipeName}
-            width={600}
-            height={400}
-            className="rounded-lg object-cover w-full"
-            data-ai-hint="food recipe"
-          />
+        <div className="mb-6 aspect-video w-full relative">
+          {isLoadingImage ? (
+            <Skeleton className="h-full w-full rounded-lg flex items-center justify-center">
+              <RefreshCw className="h-12 w-12 text-muted-foreground animate-spin" />
+            </Skeleton>
+          ) : recipe.imageDataUri ? (
+            <Image
+              src={recipe.imageDataUri}
+              alt={recipe.recipeName}
+              layout="fill"
+              objectFit="cover"
+              className="rounded-lg"
+            />
+          ) : (
+            <Image
+              src="https://placehold.co/600x400.png"
+              alt={recipe.recipeName}
+              layout="fill"
+              objectFit="cover"
+              className="rounded-lg"
+              data-ai-hint="food recipe"
+            />
+          )}
         </div>
         <Accordion type="single" collapsible defaultValue="ingredients" className="w-full mb-6">
           <AccordionItem value="ingredients">

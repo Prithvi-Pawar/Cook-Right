@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview A recipe generation AI agent based on available ingredients.
@@ -14,10 +15,7 @@ const GenerateRecipeFromIngredientsInputSchema = z.object({
   ingredients: z
     .string()
     .describe('A comma-separated list of ingredients available in the fridge.'),
-  dietaryPreferences: z
-    .string()
-    .optional()
-    .describe('Any dietary restrictions or preferences (e.g., vegetarian, gluten-free).'),
+  // dietaryPreferences field removed
 });
 export type GenerateRecipeFromIngredientsInput = z.infer<
   typeof GenerateRecipeFromIngredientsInputSchema
@@ -44,10 +42,9 @@ const prompt = ai.definePrompt({
   output: {schema: GenerateRecipeFromIngredientsOutputSchema},
   prompt: `You are a professional chef specializing in creating recipes based on available ingredients.
 
-You will generate a recipe based on the ingredients provided, taking into account any dietary preferences.
+You will generate a recipe based on the ingredients provided.
 
 Ingredients: {{{ingredients}}}
-Dietary Preferences: {{{dietaryPreferences}}}
 
 Generate a recipe with the following format:
 Recipe Name: [Recipe Name]

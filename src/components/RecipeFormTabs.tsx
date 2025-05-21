@@ -1,3 +1,4 @@
+
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,10 +18,12 @@ const descriptionFormSchema = z.object({
 
 const ingredientsFormSchema = z.object({
   ingredients: z.string().min(3, { message: 'Please list at least one ingredient.' }),
-  dietaryPreferences: z.string().optional(),
+  // dietaryPreferences field removed as per request
 });
 
-export type RecipeFormValues = z.infer<typeof descriptionFormSchema> | z.infer<typeof ingredientsFormSchema>;
+export type RecipeFormValues = 
+  | (z.infer<typeof descriptionFormSchema> & { _formType: 'description' })
+  | (z.infer<typeof ingredientsFormSchema> & { _formType: 'ingredients' });
 
 interface RecipeFormTabsProps {
   onSubmit: (values: RecipeFormValues, mode: 'description' | 'ingredients') => void;
@@ -40,16 +43,15 @@ export function RecipeFormTabs({ onSubmit, isLoading }: RecipeFormTabsProps) {
     resolver: zodResolver(ingredientsFormSchema),
     defaultValues: {
       ingredients: '',
-      dietaryPreferences: '',
     },
   });
 
   const handleDescriptionSubmit = (values: z.infer<typeof descriptionFormSchema>) => {
-    onSubmit(values, 'description');
+    onSubmit({...values, _formType: 'description'}, 'description');
   };
 
   const handleIngredientsSubmit = (values: z.infer<typeof ingredientsFormSchema>) => {
-    onSubmit(values, 'ingredients');
+    onSubmit({...values, _formType: 'ingredients'}, 'ingredients');
   };
 
   return (
@@ -118,19 +120,7 @@ export function RecipeFormTabs({ onSubmit, isLoading }: RecipeFormTabsProps) {
                 </FormItem>
               )}
             />
-            <FormField
-              control={ingredientsForm.control}
-              name="dietaryPreferences"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base">Any dietary preferences or restrictions?</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g., low-carb, nut-free" {...field} className="bg-background" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* dietaryPreferences field removed from this form */}
             <Button type="submit" disabled={isLoading} className="w-full">
               <Sparkles className="mr-2 h-5 w-5" />
               {isLoading ? 'Generating...' : 'Generate Recipe'}
