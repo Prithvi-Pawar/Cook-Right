@@ -230,7 +230,7 @@ export function RecipeGenerator() {
        <Button 
         onClick={handleStartOver} 
         variant="ghost" 
-        className="mt-8 text-primary hover:text-primary/80"
+        className="mt-8 text-primary hover:text-primary/80 mx-auto block flex items-center"
       >
         <ArrowLeft className="mr-2 h-5 w-5" /> Start Over With New Input
       </Button>
@@ -292,7 +292,7 @@ export function RecipeGenerator() {
            <Button 
             onClick={handleStartOver} 
             variant="ghost" 
-            className="mt-8 text-primary hover:text-primary/80 mx-auto block"
+            className="mt-8 text-primary hover:text-primary/80 mx-auto block flex items-center"
           >
             <ArrowLeft className="mr-2 h-5 w-5" /> Start Over With New Input
           </Button>
