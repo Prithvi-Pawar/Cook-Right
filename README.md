@@ -36,7 +36,7 @@ Prerequisites:
 
 Installation:
 1. Clone the repository
-   git clone https://github.com/your-username/Cook-Right.git
+   git clone- [https://github.com/your-username/Cook-Right.git](https://github.com/Prithvi-Pawar/Cook-Right.git)
 2. Navigate to the project directory
    cd Cook-Right
 3. Install dependencies
