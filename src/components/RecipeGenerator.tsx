@@ -1,7 +1,7 @@
-
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { generateNamedRecipeFromDescription, type GenerateRecipeOutput as GenerateRecipeFromDescriptionOutput, type GenerateNamedRecipeFromDescriptionInput } from '@/ai/flows/generate-named-recipe-from-description-flow';
 import { suggestRecipeNamesFromDescription, type SuggestRecipeNamesFromDescriptionInput, type SuggestRecipeNamesOutput as SuggestRecipeNamesFromDescriptionOutput } from '@/ai/flows/suggest-recipe-names-from-description-flow';
 import { generateNamedRecipeFromIngredients, type GenerateRecipeFromIngredientsOutput, type GenerateNamedRecipeFromIngredientsInput } from '@/ai/flows/generate-recipe-from-ingredients';
@@ -11,8 +11,8 @@ import { RecipeDisplay } from './RecipeDisplay';
 import { RecipeFormTabs, type RecipeFormValues } from './RecipeFormTabs';
 import { LoadingSpinner } from './LoadingSpinner';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { Terminal, ArrowLeft, Lightbulb, ChefHat } from 'lucide-react';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Terminal, ArrowLeft, Lightbulb, ChefHat, Youtube } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 
 type BaseRecipeData = GenerateRecipeFromDescriptionOutput | GenerateRecipeFromIngredientsOutput;
@@ -281,13 +281,28 @@ export function RecipeGenerator() {
 
       {showRecipeDisplay && (
         <div className="mt-10">
-          {( (currentFormMode === 'description' && selectedRecipeNameToGenerateFromDescription) || 
-             (currentFormMode === 'ingredients' && selectedRecipeNameToGenerateFromIngredients) 
-           ) && (
-            <Button onClick={handleBackToSuggestions} variant="outline" className="mb-6 bg-card hover:bg-accent">
-              <ArrowLeft className="mr-2 h-5 w-5" /> Back to Suggestions
-            </Button>
-          )}
+          <div className="mb-6 flex w-full items-center justify-between">
+            {((currentFormMode === 'description' && selectedRecipeNameToGenerateFromDescription) || (currentFormMode === 'ingredients' && selectedRecipeNameToGenerateFromIngredients)) ? (
+              <Button onClick={handleBackToSuggestions} variant="outline" className="bg-card hover:bg-accent">
+                <ArrowLeft className="mr-2 h-5 w-5" /> Back to Suggestions
+              </Button>
+            ) : (
+              <div /> // Empty div to push the YouTube button to the right
+            )}
+
+            {recipeData?.recipeName && (
+              <Link
+                href={`https://www.youtube.com/results?search_query=${encodeURIComponent(recipeData.recipeName + ' recipe')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={buttonVariants({ variant: 'destructive' })}
+              >
+                <Youtube className="mr-2 h-5 w-5" />
+                Search on YouTube
+              </Link>
+            )}
+          </div>
+
           <RecipeDisplay recipe={recipeData} isLoadingImage={isLoadingImage} />
            <Button 
             onClick={handleStartOver} 
