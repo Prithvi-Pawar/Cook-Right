@@ -281,13 +281,13 @@ export function RecipeGenerator() {
 
       {showRecipeDisplay && (
         <div className="mt-10">
-          <div className="mb-6 flex w-full items-center justify-between">
+          <div className="mb-6 flex flex-col md:flex-row w-full items-center justify-between gap-4">
             {((currentFormMode === 'description' && selectedRecipeNameToGenerateFromDescription) || (currentFormMode === 'ingredients' && selectedRecipeNameToGenerateFromIngredients)) ? (
-              <Button onClick={handleBackToSuggestions} variant="outline" className="bg-card hover:bg-accent">
+              <Button onClick={handleBackToSuggestions} variant="outline" className="bg-card hover:bg-accent w-full md:w-auto">
                 <ArrowLeft className="mr-2 h-5 w-5" /> Back to Suggestions
               </Button>
             ) : (
-              <div /> // Empty div to push the YouTube button to the right
+              <div /> // Empty div to push the YouTube button to the right on desktop
             )}
 
             {recipeData?.recipeName && (
@@ -295,7 +295,7 @@ export function RecipeGenerator() {
                 href={`https://www.youtube.com/results?search_query=${encodeURIComponent(recipeData.recipeName + ' recipe')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={buttonVariants({ variant: 'destructive' })}
+                className={`${buttonVariants({ variant: 'destructive' })} w-full md:w-auto`}
               >
                 <Youtube className="mr-2 h-5 w-5" />
                 Search on YouTube
