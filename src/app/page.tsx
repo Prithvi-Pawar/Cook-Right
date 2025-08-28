@@ -61,7 +61,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <Link href="/generate-recipe">
+        <Link href="/generate-recipe" prefetch={true}>
           <Button
             size="lg"
             className="bg-gradient-to-r from-pink-500 to-amber-500 hover:from-pink-600 hover:to-amber-600 text-white font-bold py-4 px-10 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105 text-lg"
