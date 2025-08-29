@@ -5,13 +5,18 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { ClipboardList, ListOrdered, Image as ImageIcon, RefreshCw } from 'lucide-react'; // Added ImageIcon, RefreshCw
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton'; // Added Skeleton
+import { TranslateRecipe } from './TranslateRecipe';
 
 interface RecipeDisplayProps {
   recipe: RecipeDataWithImage;
+  originalRecipe: RecipeDataWithImage | null;
+  onTranslate: (language: string) => Promise<void>;
+  isTranslating: boolean;
+  onResetTranslation: () => void;
   isLoadingImage?: boolean;
 }
 
-export function RecipeDisplay({ recipe, isLoadingImage }: RecipeDisplayProps) {
+export function RecipeDisplay({ recipe, originalRecipe, onTranslate, isTranslating, onResetTranslation, isLoadingImage }: RecipeDisplayProps) {
   const instructionsArray = typeof recipe.instructions === 'string'
     ? recipe.instructions.split(/\\n|\n/).map(line => line.trim()).filter(line => line !== '')
     : recipe.instructions.map(line => line.trim()).filter(line => line !== '');
@@ -49,6 +54,14 @@ export function RecipeDisplay({ recipe, isLoadingImage }: RecipeDisplayProps) {
             />
           )}
         </div>
+
+        <TranslateRecipe 
+          onTranslate={onTranslate} 
+          isTranslating={isTranslating} 
+          hasBeenTranslated={!!originalRecipe}
+          onResetTranslation={onResetTranslation}
+        />
+
         <Accordion type="single" collapsible defaultValue="ingredients" className="w-full mb-6">
           <AccordionItem value="ingredients">
             <AccordionTrigger className="text-xl font-semibold text-foreground hover:text-primary">
