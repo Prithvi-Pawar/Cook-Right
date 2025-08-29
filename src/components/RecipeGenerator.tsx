@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -7,6 +8,7 @@ import { suggestRecipeNamesFromDescription, type SuggestRecipeNamesFromDescripti
 import { generateNamedRecipeFromIngredients, type GenerateRecipeFromIngredientsOutput, type GenerateNamedRecipeFromIngredientsInput } from '@/ai/flows/generate-recipe-from-ingredients';
 import { suggestRecipeNames, type SuggestRecipeNamesInput, type SuggestRecipeNamesOutput as SuggestRecipeNamesFromIngredientsOutput } from '@/ai/flows/suggest-recipe-names-flow';
 import { generateRecipeImage, type GenerateRecipeImageInput } from '@/ai/flows/generate-recipe-image';
+import { translateRecipe, type TranslateRecipeInput, type TranslateRecipeOutput } from '@/ai/flows/translate-recipe-flow';
 import { RecipeDisplay } from './RecipeDisplay';
 import { RecipeFormTabs, type RecipeFormValues } from './RecipeFormTabs';
 import { LoadingSpinner } from './LoadingSpinner';
@@ -21,7 +23,9 @@ export type RecipeDataWithImage = BaseRecipeData & { imageDataUri?: string };
 export function RecipeGenerator() {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingImage, setIsLoadingImage] = useState(false);
+  const [isTranslating, setIsTranslating] = useState(false);
   const [recipeData, setRecipeData] = useState<RecipeDataWithImage | null>(null);
+  const [originalRecipe, setOriginalRecipe] = useState<RecipeDataWithImage | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
@@ -68,6 +72,65 @@ export function RecipeGenerator() {
     }
   };
 
+  const handleTranslateRecipe = async (language: string) => {
+    if (!recipeData) return;
+
+    setIsTranslating(true);
+    setError(null);
+    try {
+      // If we haven't translated before, store the current recipe as the original
+      if (!originalRecipe) {
+        setOriginalRecipe(recipeData);
+      }
+
+      const recipeToTranslate = originalRecipe || recipeData;
+
+      const instructionsArray = typeof recipeToTranslate.instructions === 'string'
+        ? recipeToTranslate.instructions.split(/\\n|\n/).map(line => line.trim()).filter(line => line)
+        : recipeToTranslate.instructions.map(line => line.trim()).filter(line => line);
+      
+      const translationInput: TranslateRecipeInput = {
+        recipeName: recipeToTranslate.recipeName,
+        ingredients: recipeToTranslate.ingredients,
+        instructions: instructionsArray,
+        targetLanguage: language,
+      };
+
+      const translatedResult = await translateRecipe(translationInput);
+
+      setRecipeData(prevData => ({
+        ...(prevData as RecipeDataWithImage),
+        recipeName: translatedResult.recipeName,
+        ingredients: translatedResult.ingredients,
+        instructions: translatedResult.instructions,
+      }));
+
+      toast({
+        title: "Recipe Translated!",
+        description: `The recipe has been translated to ${language}.`,
+      });
+
+    } catch (e) {
+      console.error(e);
+      const errorMessage = e instanceof Error ? e.message : "An unexpected error occurred during translation.";
+      setError(`Translation failed: ${errorMessage}`);
+      toast({ variant: "destructive", title: "Translation Failed", description: errorMessage });
+    } finally {
+      setIsTranslating(false);
+    }
+  };
+
+  const handleResetTranslation = () => {
+    if (originalRecipe) {
+      setRecipeData(originalRecipe);
+      setOriginalRecipe(null);
+      toast({
+        title: "Translation Reset",
+        description: "The recipe has been reverted to its original language.",
+      });
+    }
+  };
+
   const resetAllSuggestionsAndSelections = () => {
     setSuggestedRecipeNamesForDescription(null);
     setSelectedRecipeNameToGenerateFromDescription(null);
@@ -77,6 +140,8 @@ export function RecipeGenerator() {
     setSuggestedRecipeNamesForIngredients(null);
     setSelectedRecipeNameToGenerateFromIngredients(null);
     setStoredIngredients(null);
+
+    setOriginalRecipe(null);
   }
 
   const handleSubmit = async (values: RecipeFormValues, mode: 'description' | 'ingredients') => {
@@ -193,6 +258,7 @@ export function RecipeGenerator() {
     setSelectedRecipeNameToGenerateFromDescription(null);
     setSelectedRecipeNameToGenerateFromIngredients(null);
     setError(null);
+    setOriginalRecipe(null);
     // Keep stored inputs and suggested names
   };
   
@@ -210,31 +276,36 @@ export function RecipeGenerator() {
   
   const showRecipeDisplay = recipeData && !isLoading;
 
-  const SuggestionsDisplay = ({ names, context, onSelect, titleIcon }: { names: string[] | null, context: string | null, onSelect: (name: string) => void, titleIcon?: React.ReactNode }) => (
-    <div className="mt-10 max-w-xl mx-auto text-center">
-      {titleIcon || <Lightbulb className="h-12 w-12 text-primary mx-auto mb-4" />}
-      <h3 className="text-2xl font-semibold mb-2 text-foreground">Recipe Ideas</h3>
-      {context && <p className="mb-6 text-muted-foreground">Based on: "{context}"</p>}
-      <div className="space-y-3">
-        {names?.map(name => (
-          <Button 
-            key={name} 
-            onClick={() => onSelect(name)} 
-            variant="outline" 
-            className="w-full justify-start py-6 text-lg shadow-sm hover:shadow-md transition-shadow"
-          >
-            {name}
-          </Button>
-        ))}
-      </div>
-       <Button 
-        onClick={handleStartOver} 
-        variant="ghost" 
-        className="mt-8 text-primary hover:text-primary/80 mx-auto block flex items-center"
-      >
-        <ArrowLeft className="mr-2 h-5 w-5" /> Start Over With New Input
-      </Button>
-    </div>
+  const SuggestionsDisplay = ({ names, context, onSelect, titleIcon, description }: { names: string[] | null, context: string | null, onSelect: (name: string) => void, titleIcon?: React.ReactNode, description?: string }) => (
+    <Card className="mt-10 max-w-xl mx-auto text-center shadow-lg border-primary/20">
+        <CardHeader>
+          <div className="w-full flex justify-center mb-4">
+            {titleIcon || <Lightbulb className="h-12 w-12 text-primary" />}
+          </div>
+          <CardTitle className="text-2xl font-semibold text-foreground">{description}</CardTitle>
+          <CardDescription>Based on: "{context}"</CardDescription>
+          <p className="text-sm text-muted-foreground pt-2">Here are a few recipe names our AI chef came up with. Select one to see the full recipe!</p>
+        </CardHeader>
+        <CardContent className="space-y-3 p-6 pt-2">
+            {names?.map(name => (
+            <Button 
+                key={name} 
+                onClick={() => onSelect(name)} 
+                variant="outline" 
+                className="w-full justify-center text-center py-6 text-base shadow-sm rounded-lg bg-background text-foreground border-border hover:bg-muted/50"
+            >
+                {name}
+            </Button>
+            ))}
+            <Button 
+              onClick={handleStartOver} 
+              variant="ghost" 
+              className="mt-8 text-primary hover:text-primary/80 mx-auto block flex items-center"
+            >
+              <ArrowLeft className="mr-2 h-5 w-5" /> Start Over With New Input
+            </Button>
+        </CardContent>
+    </Card>
   );
 
 
@@ -267,7 +338,8 @@ export function RecipeGenerator() {
           names={suggestedRecipeNamesForDescription}
           context={storedDescription ? `${storedDescription}${storedDietaryPrefs ? ` (${storedDietaryPrefs})` : ''}` : null}
           onSelect={(name) => handleSelectRecipeName(name, 'description')}
-          titleIcon={<ChefHat className="h-12 w-12 text-primary mx-auto mb-4" />}
+          titleIcon={<ChefHat className="h-12 w-12 text-primary" />}
+          description="Recipe Ideas from Your Description"
         />
       )}
 
@@ -276,6 +348,8 @@ export function RecipeGenerator() {
           names={suggestedRecipeNamesForIngredients}
           context={storedIngredients}
           onSelect={(name) => handleSelectRecipeName(name, 'ingredients')}
+          titleIcon={<Lightbulb className="h-12 w-12 text-primary" />}
+          description="Recipe Ideas from Your Ingredients"
         />
       )}
 
@@ -303,7 +377,14 @@ export function RecipeGenerator() {
             )}
           </div>
 
-          <RecipeDisplay recipe={recipeData} isLoadingImage={isLoadingImage} />
+          <RecipeDisplay 
+            recipe={recipeData} 
+            isLoadingImage={isLoadingImage}
+            originalRecipe={originalRecipe}
+            onTranslate={handleTranslateRecipe}
+            isTranslating={isTranslating}
+            onResetTranslation={handleResetTranslation}
+          />
            <Button 
             onClick={handleStartOver} 
             variant="ghost" 

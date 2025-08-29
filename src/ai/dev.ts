@@ -8,3 +8,4 @@ import '@/ai/flows/summarize-recipe.ts';
 import '@/ai/flows/generate-recipe-image.ts';
 import '@/ai/flows/suggest-recipe-names-flow.ts'; 
 import '@/ai/flows/suggest-recipe-names-from-description-flow.ts'; // Added new flow for description suggestions
+import '@/ai/flows/translate-recipe-flow.ts'; // Added for translation
