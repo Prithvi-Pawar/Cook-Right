@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -14,6 +13,7 @@ import { RecipeFormTabs, type RecipeFormValues } from './RecipeFormTabs';
 import { LoadingSpinner } from './LoadingSpinner';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button, buttonVariants } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Terminal, ArrowLeft, Lightbulb, ChefHat, Youtube } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 
