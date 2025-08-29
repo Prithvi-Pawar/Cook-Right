@@ -14,7 +14,7 @@ interface TranslateRecipeProps {
 }
 
 const supportedLanguages = [
-  "Spanish", "French", "German", "Italian", "Mandarin", "Hindi", "Japanese", "Russian", "Portuguese", "Arabic"
+  "Spanish", "French", "German", "Italian", "Mandarin", "Hindi", "Japanese", "Russian", "Portuguese", "Arabic", "Bengali", "Telugu", "Marathi", "Tamil"
 ];
 
 export function TranslateRecipe({ onTranslate, isTranslating, hasBeenTranslated, onResetTranslation }: TranslateRecipeProps) {
