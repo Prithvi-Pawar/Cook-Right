@@ -6,10 +6,7 @@ import { generateNamedRecipeFromDescription, type GenerateRecipeOutput as Genera
 import { suggestRecipeNamesFromDescription, type SuggestRecipeNamesFromDescriptionInput, type SuggestRecipeNamesOutput as SuggestRecipeNamesFromDescriptionOutput } from '@/ai/flows/suggest-recipe-names-from-description-flow';
 import { generateNamedRecipeFromIngredients, type GenerateRecipeFromIngredientsOutput, type GenerateNamedRecipeFromIngredientsInput } from '@/ai/flows/generate-recipe-from-ingredients';
 import { suggestRecipeNames, type SuggestRecipeNamesInput, type SuggestRecipeNamesOutput as SuggestRecipeNamesFromIngredientsOutput } from '@/ai/flows/suggest-recipe-names-flow';
-<<<<<<< HEAD
 import { generateRecipeImage, type GenerateRecipeImageInput } from '@/ai/flows/generate-recipe-image';
-=======
->>>>>>> 89a487b31cc278830769156c2455b0a705de82d9
 import { translateRecipe, type TranslateRecipeInput, type TranslateRecipeOutput } from '@/ai/flows/translate-recipe-flow';
 import { RecipeDisplay } from './RecipeDisplay';
 import { RecipeFormTabs, type RecipeFormValues } from './RecipeFormTabs';
@@ -45,65 +42,6 @@ export function RecipeGenerator() {
   const [suggestedRecipeNamesForIngredients, setSuggestedRecipeNamesForIngredients] = useState<string[] | null>(null);
   const [selectedRecipeNameToGenerateFromIngredients, setSelectedRecipeNameToGenerateFromIngredients] = useState<string | null>(null);
 
-
-  const handleTranslateRecipe = async (language: string) => {
-    if (!recipeData) return;
-
-    setIsTranslating(true);
-    setError(null);
-    try {
-      // If we haven't translated before, store the current recipe as the original
-      if (!originalRecipe) {
-        setOriginalRecipe(recipeData);
-      }
-
-      const recipeToTranslate = originalRecipe || recipeData;
-
-      const instructionsArray = typeof recipeToTranslate.instructions === 'string'
-        ? recipeToTranslate.instructions.split(/\\n|\n/).map(line => line.trim()).filter(line => line)
-        : recipeToTranslate.instructions.map(line => line.trim()).filter(line => line);
-      
-      const translationInput: TranslateRecipeInput = {
-        recipeName: recipeToTranslate.recipeName,
-        ingredients: recipeToTranslate.ingredients,
-        instructions: instructionsArray,
-        targetLanguage: language,
-      };
-
-      const translatedResult = await translateRecipe(translationInput);
-
-      setRecipeData(prevData => ({
-        ...(prevData as RecipeDataWithImage),
-        recipeName: translatedResult.recipeName,
-        ingredients: translatedResult.ingredients,
-        instructions: translatedResult.instructions,
-      }));
-
-      toast({
-        title: "Recipe Translated!",
-        description: `The recipe has been translated to ${language}.`,
-      });
-
-    } catch (e) {
-      console.error(e);
-      const errorMessage = e instanceof Error ? e.message : "An unexpected error occurred during translation.";
-      setError(`Translation failed: ${errorMessage}`);
-      toast({ variant: "destructive", title: "Translation Failed", description: errorMessage });
-    } finally {
-      setIsTranslating(false);
-    }
-  };
-
-  const handleResetTranslation = () => {
-    if (originalRecipe) {
-      setRecipeData(originalRecipe);
-      setOriginalRecipe(null);
-      toast({
-        title: "Translation Reset",
-        description: "The recipe has been reverted to its original language.",
-      });
-    }
-  };
 
   const handleTranslateRecipe = async (language: string) => {
     if (!recipeData) return;
