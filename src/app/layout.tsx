@@ -17,6 +17,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Recipe Right',
   description: 'Generate delicious recipes tailored to your needs!',
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
