@@ -30,7 +30,6 @@ export function RecipeDisplay({ recipe, originalRecipe, onTranslate, isTranslati
         </CardDescription>
       </CardHeader>
       <CardContent>
-<<<<<<< HEAD
         <div className="mb-6 aspect-video w-full relative">
           {isLoadingImage ? (
             <Skeleton className="h-full w-full rounded-lg flex items-center justify-center">
@@ -55,9 +54,6 @@ export function RecipeDisplay({ recipe, originalRecipe, onTranslate, isTranslati
             />
           )}
         </div>
-=======
-        
->>>>>>> 89a487b31cc278830769156c2455b0a705de82d9
 
         <TranslateRecipe 
           onTranslate={onTranslate} 

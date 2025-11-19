@@ -14,10 +14,3 @@ import '@/ai/flows/generate-recipe-from-ingredients.ts';
 import '@/ai/flows/suggest-recipe-names-flow.ts';
 import '@/ai/flows/suggest-recipe-names-from-description-flow.ts';
 import '@/ai/flows/summarize-recipe.ts';
-<<<<<<< HEAD
-import '@/ai/flows/generate-recipe-image.ts';
-import '@/ai/flows/suggest-recipe-names-flow.ts'; 
-import '@/ai/flows/suggest-recipe-names-from-description-flow.ts'; // Added new flow for description suggestions
-import '@/ai/flows/translate-recipe-flow.ts'; // Added for translation
-=======
->>>>>>> 89a487b31cc278830769156c2455b0a705de82d9
