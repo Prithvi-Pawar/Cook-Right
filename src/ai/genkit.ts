@@ -7,5 +7,5 @@ config(); // Load environment variables
 
 export const ai = genkit({
   plugins: [googleAI()],
-  model: 'gemini-1.5-flash',
+  model: 'gemini-pro',
 });
