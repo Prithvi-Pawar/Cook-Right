@@ -36,10 +36,9 @@ const generateRecipeImageFlow = ai.defineFlow(
     const promptText = `Generate a vibrant, appetizing, high-quality photograph of a dish called "${input.recipeName}". ${input.additionalContext ? `It is known for being ${input.additionalContext}.` : ''} The image should be suitable for a recipe website. Focus on making the food look delicious and well-presented.`;
     
     const { media } = await ai.generate({
-      model: 'googleai/gemini-2.0-flash-exp', // IMPORTANT: Specific model for image generation
+      model: 'googleai/imagen-4.0-fast-generate-001', // IMPORTANT: Specific model for image generation
       prompt: promptText,
       config: {
-        responseModalities: ['TEXT', 'IMAGE'], // MUST provide both
          safetySettings: [ // Added safety settings as good practice
           { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
           { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
