@@ -6,7 +6,6 @@ import { generateNamedRecipeFromDescription, type GenerateRecipeOutput as Genera
 import { suggestRecipeNamesFromDescription, type SuggestRecipeNamesFromDescriptionInput, type SuggestRecipeNamesOutput as SuggestRecipeNamesFromDescriptionOutput } from '@/ai/flows/suggest-recipe-names-from-description-flow';
 import { generateNamedRecipeFromIngredients, type GenerateRecipeFromIngredientsOutput, type GenerateNamedRecipeFromIngredientsInput } from '@/ai/flows/generate-recipe-from-ingredients';
 import { suggestRecipeNames, type SuggestRecipeNamesInput, type SuggestRecipeNamesOutput as SuggestRecipeNamesFromIngredientsOutput } from '@/ai/flows/suggest-recipe-names-flow';
-import { generateRecipeImage, type GenerateRecipeImageInput } from '@/ai/flows/generate-recipe-image';
 import { translateRecipe, type TranslateRecipeInput, type TranslateRecipeOutput } from '@/ai/flows/translate-recipe-flow';
 import { RecipeDisplay } from './RecipeDisplay';
 import { RecipeFormTabs, type RecipeFormValues } from './RecipeFormTabs';
@@ -42,35 +41,6 @@ export function RecipeGenerator() {
   const [suggestedRecipeNamesForIngredients, setSuggestedRecipeNamesForIngredients] = useState<string[] | null>(null);
   const [selectedRecipeNameToGenerateFromIngredients, setSelectedRecipeNameToGenerateFromIngredients] = useState<string | null>(null);
 
-
-  const handleImageGeneration = async (recipeName: string, additionalContext?: string) => {
-    setIsLoadingImage(true);
-    try {
-      const imageInput: GenerateRecipeImageInput = { 
-        recipeName,
-        additionalContext
-      };
-      const imageResult = await generateRecipeImage(imageInput);
-      setRecipeData(prevData => prevData ? { ...prevData, imageDataUri: imageResult.imageDataUri } : null);
-      toast({
-        title: "Image Generated!",
-        description: `Image for "${recipeName}" is ready.`,
-        className: "bg-blue-100 border-blue-400 text-blue-700 dark:bg-blue-900 dark:border-blue-700 dark:text-blue-300"
-      });
-    } catch (imgErr) {
-      console.error("Image generation failed:", imgErr);
-      const imageErrorMessage = imgErr instanceof Error ? imgErr.message : "Could not generate an image for the recipe.";
-      toast({
-        variant: "destructive",
-        title: "Image Generation Failed",
-        description: imageErrorMessage,
-      });
-      // Keep text recipe if image fails
-      setRecipeData(prevData => prevData ? { ...prevData, imageDataUri: undefined } : null); 
-    } finally {
-      setIsLoadingImage(false);
-    }
-  };
 
   const handleTranslateRecipe = async (language: string) => {
     if (!recipeData) return;
@@ -212,7 +182,6 @@ export function RecipeGenerator() {
 
     try {
       let result: BaseRecipeData;
-      let imageContext: string | undefined;
 
       if (sourceMode === 'description') {
         if (!storedDescription) throw new Error("Original description not found.");
@@ -223,7 +192,6 @@ export function RecipeGenerator() {
           ...(storedDietaryPrefs && { dietaryPreferences: storedDietaryPrefs }),
         };
         result = await generateNamedRecipeFromDescription(recipeInput);
-        imageContext = `${storedDescription.substring(0, 50)}${storedDietaryPrefs ? `, ${storedDietaryPrefs}` : ''}`;
       } else { // sourceMode === 'ingredients'
         if (!storedIngredients) throw new Error("Ingredients not found.");
         setSelectedRecipeNameToGenerateFromIngredients(recipeName);
@@ -232,16 +200,14 @@ export function RecipeGenerator() {
           selectedRecipeName: recipeName,
         };
         result = await generateNamedRecipeFromIngredients(recipeInput);
-        imageContext = `made with ${storedIngredients.split(',').slice(0,3).join(', ')}`;
       }
       
       setRecipeData(result);
       toast({
         title: "Recipe Generated!",
-        description: `Your recipe for "${result.recipeName}" is ready. Generating image...`,
+        description: `Your recipe for "${result.recipeName}" is ready.`,
         className: "bg-green-100 border-green-400 text-green-700 dark:bg-green-900 dark:border-green-700 dark:text-green-300"
       });
-      await handleImageGeneration(result.recipeName, imageContext);
 
     } catch (e) {
       console.error(e);
@@ -315,14 +281,13 @@ export function RecipeGenerator() {
          <RecipeFormTabs onSubmit={handleSubmit} isLoading={isLoading || isLoadingImage} />
       )}
       
-      {(isLoading || isLoadingImage) && !showDescriptionSuggestions && !showIngredientsSuggestions && (
+      {isLoading && (
         <div className="mt-10">
           <LoadingSpinner />
-           {isLoadingImage && !isLoading && <p className="text-center text-foreground/80 mt-2">Generating recipe image...</p>}
         </div>
       )}
 
-      {error && !isLoading && !isLoadingImage && (
+      {error && !isLoading && (
         <Alert variant="destructive" className="mt-10 max-w-xl mx-auto">
           <Terminal className="h-5 w-5" />
           <AlertTitle>Oops! Something went wrong.</AlertTitle>

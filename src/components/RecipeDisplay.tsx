@@ -30,30 +30,7 @@ export function RecipeDisplay({ recipe, originalRecipe, onTranslate, isTranslati
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="mb-6 aspect-video w-full relative">
-          {isLoadingImage ? (
-            <Skeleton className="h-full w-full rounded-lg flex items-center justify-center">
-              <RefreshCw className="h-12 w-12 text-muted-foreground animate-spin" />
-            </Skeleton>
-          ) : recipe.imageDataUri ? (
-            <Image
-              src={recipe.imageDataUri}
-              alt={recipe.recipeName}
-              layout="fill"
-              objectFit="cover"
-              className="rounded-lg"
-            />
-          ) : (
-            <Image
-              src="https://placehold.co/600x400.png"
-              alt={recipe.recipeName}
-              layout="fill"
-              objectFit="cover"
-              className="rounded-lg"
-              data-ai-hint="food recipe"
-            />
-          )}
-        </div>
+        
 
         <TranslateRecipe 
           onTranslate={onTranslate} 

@@ -6,7 +6,6 @@ config();
 import '@/ai/flows/generate-recipe.ts';
 
 // Supporting flows
-import '@/ai/flows/generate-recipe-image.ts';
 import '@/ai/flows/translate-recipe-flow.ts';
 
 // Legacy or specialized flows (can be removed if the new UI doesn't use them)
