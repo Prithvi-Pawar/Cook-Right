@@ -1,27 +1,24 @@
 {
-  "name": "Cook Right",
-  "short_name": "CookRight",
-  "description": "Your AI-powered culinary assistant to discover, create, and visualize amazing recipes!",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#FAFAFA",
-  "theme_color": "#D5A6BD",
+  "theme_color": "#8936FF",
+  "background_color": "#2EC6FE",
   "icons": [
     {
-      "src": "/icon-192x192.png",
-      "sizes": "192x192",
+      "purpose": "maskable",
+      "sizes": "512x512",
+      "src": "icon512_maskable.png",
       "type": "image/png"
     },
     {
-      "src": "/icon-512x512.png",
+      "purpose": "any",
       "sizes": "512x512",
+      "src": "icon512_rounded.png",
       "type": "image/png"
-    },
-    {
-      "src": "/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
     }
-  ]
+  ],
+  "orientation": "any",
+  "display": "standalone",
+  "dir": "auto",
+  "lang": "en-US",
+  "name": "Cook Right",
+  "short_name": "Cook-Right"
 }
