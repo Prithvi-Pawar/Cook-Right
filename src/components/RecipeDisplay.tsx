@@ -48,7 +48,7 @@ export function RecipeDisplay({ recipe, originalRecipe, onTranslate, isTranslati
               className="rounded-lg"
               width="100%"
               height="100%"
-              src={`https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(recipe.recipeName + ' recipe')}`}
+              src={`https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(recipe.recipeName + ' recipe Sanjeev Kapoor Khazana')}`}
               title="YouTube video player"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
