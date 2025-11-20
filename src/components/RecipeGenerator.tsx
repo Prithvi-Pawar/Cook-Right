@@ -203,6 +203,11 @@ export function RecipeGenerator() {
         result = await generateNamedRecipeFromIngredients(recipeInput);
       }
       
+      // Push the new recipe state to history
+      history.pushState({
+        recipeName: result.recipeName,
+        sourceMode: sourceMode
+      }, `Recipe: ${recipeName}`, `/generate-recipe?recipe=${encodeURIComponent(recipeName)}`);
       setRecipeData(result);
       toast({
         title: "Recipe Generated!",
