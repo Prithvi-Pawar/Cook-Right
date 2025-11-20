@@ -7,6 +7,7 @@ import '@/ai/flows/generate-recipe.ts';
 
 // Supporting flows
 import '@/ai/flows/translate-recipe-flow.ts';
+import '@/ai/flows/get-youtube-video-for-recipe.ts';
 
 // Legacy or specialized flows (can be removed if the new UI doesn't use them)
 import '@/ai/flows/generate-named-recipe-from-description-flow.ts';

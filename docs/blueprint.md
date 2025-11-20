@@ -1,4 +1,4 @@
-# **App Name**: Recipe Right
+# **App Name**: Cook Right
 
 ## Core Features:
 
