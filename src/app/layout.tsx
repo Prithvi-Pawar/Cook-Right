@@ -15,8 +15,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Recipe Right',
-  description: 'Generate delicious recipes tailored to your needs!',
+  title: 'Cook Right | AI Recipe Generator',
+  description: 'Your AI-powered culinary assistant. Generate unique recipes from a description, or find creative ways to use the ingredients you already have in your fridge. Start cooking with AI today!',
+  keywords: [
+    "AI recipe generator",
+    "recipe generator from ingredients",
+    "custom recipe maker", "cooking AI", "meal ideas", "what to cook"
+  ],
   manifest: "/manifest.json",
 };
 

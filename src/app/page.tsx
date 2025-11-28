@@ -18,7 +18,7 @@ export default function LandingPage() {
             </span>
           </h1>
           <p className="text-xl sm:text-2xl text-neutral-700 max-w-2xl mx-auto">
-            Your AI-powered culinary assistant to discover, create, and visualize amazing recipes!
+            Your AI-powered culinary assistant. Instantly generate unique recipes from a simple description or the ingredients you have on hand.
           </p>
         </header>
 
@@ -42,7 +42,7 @@ export default function LandingPage() {
             <div className="bg-white/80 backdrop-blur-md p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1">
               <Lightbulb className="h-10 w-10 text-sky-500 mb-4" /> {/* Changed from Image to Lightbulb for consistency */}
               <h3 className="text-xl font-semibold mb-2 text-neutral-800">AI-Generated Images</h3>
-              <p className="text-neutral-600 text-sm leading-relaxed">
+              <p className="text-neutral-600 text-sm leading-relaxed"> 
                 Visualize your culinary creations with stunning, AI-generated images for every recipe.
               </p>
             </div>
@@ -55,7 +55,7 @@ export default function LandingPage() {
             <ol className="list-decimal list-inside text-md text-neutral-600 space-y-3 text-left">
               <li>Choose your mode: describe a dish or list ingredients.</li>
               <li>Provide the details and click "Generate Recipe".</li>
-              <li>Our AI crafts a custom recipe, complete with an image.</li>
+              <li>Our AI crafts a custom recipe, complete with cooking instructions and a video suggestion.</li>
               <li>Follow the steps, cook, and enjoy your meal!</li>
             </ol>
           </div>
