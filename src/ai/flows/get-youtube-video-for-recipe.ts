@@ -13,6 +13,7 @@ export type GetYoutubeVideoForRecipeInput = z.infer<typeof GetYoutubeVideoForRec
 
 const GetYoutubeVideoForRecipeOutputSchema = z.object({
   videoId: z.string().optional().describe('The ID of the top YouTube video found.'),
+  thumbnailUrl: z.string().optional().describe('The URL of the video thumbnail.'),
 });
 export type GetYoutubeVideoForRecipeOutput = z.infer<typeof GetYoutubeVideoForRecipeOutputSchema>;
 
@@ -27,24 +28,32 @@ const getYoutubeVideoForRecipeFlow = ai.defineFlow(
     outputSchema: GetYoutubeVideoForRecipeOutputSchema,
   },
   async (input) => {
-    const apiKey = process.env.YOUTUBE_API_KEY;
-    if (!apiKey) {
-      console.warn('YOUTUBE_API_KEY is not set. Skipping video search.');
-      return { videoId: undefined };
-    }
-
     const query = encodeURIComponent(`${input.recipeName} recipe`);
-    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&type=video&maxResults=1&key=${apiKey}`;
+    // Scrape YouTube search results (sorted by view count) to find the most trending/popular video
+    const url = `https://www.youtube.com/results?search_query=${query}&sp=CAMSAhAB`;
 
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      cache: 'no-store',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+      },
+    });
+
     if (!response.ok) {
-      console.error('Failed to fetch from YouTube API:', await response.text());
+      console.error('Failed to fetch from YouTube:', response.status);
       return { videoId: undefined };
     }
 
-    const data = await response.json();
-    const videoId = data.items?.[0]?.id?.videoId;
+    const html = await response.text();
+    // Regex to extract the first video ID from the HTML content (YouTube IDs are 11 chars)
+    const match = html.match(/"videoId":"([a-zA-Z0-9_-]{11})"/);
+    const videoId = match ? match[1] : undefined;
+    const thumbnailUrl = videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : undefined;
 
-    return { videoId };
+    if (!videoId) {
+      console.warn(`No YouTube video found for query: ${query}`);
+    }
+
+    return { videoId, thumbnailUrl };
   }
 );
