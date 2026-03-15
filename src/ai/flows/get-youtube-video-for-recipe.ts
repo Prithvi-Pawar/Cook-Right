@@ -13,7 +13,6 @@ export type GetYoutubeVideoForRecipeInput = z.infer<typeof GetYoutubeVideoForRec
 
 const GetYoutubeVideoForRecipeOutputSchema = z.object({
   videoId: z.string().optional().describe('The ID of the top YouTube video found.'),
-  thumbnailUrl: z.string().optional().describe('The URL of the video thumbnail.'),
 });
 export type GetYoutubeVideoForRecipeOutput = z.infer<typeof GetYoutubeVideoForRecipeOutputSchema>;
 
@@ -29,8 +28,8 @@ const getYoutubeVideoForRecipeFlow = ai.defineFlow(
   },
   async (input) => {
     const query = encodeURIComponent(`${input.recipeName} recipe`);
-    // Scrape YouTube search results (sorted by view count) to find the most trending/popular video
-    const url = `https://www.youtube.com/results?search_query=${query}&sp=CAMSAhAB`;
+    // Scrape YouTube search results to avoid API key requirement and quota limits
+    const url = `https://www.youtube.com/results?search_query=${query}`;
 
     const response = await fetch(url, {
       cache: 'no-store',
@@ -48,12 +47,11 @@ const getYoutubeVideoForRecipeFlow = ai.defineFlow(
     // Regex to extract the first video ID from the HTML content (YouTube IDs are 11 chars)
     const match = html.match(/"videoId":"([a-zA-Z0-9_-]{11})"/);
     const videoId = match ? match[1] : undefined;
-    const thumbnailUrl = videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : undefined;
 
     if (!videoId) {
       console.warn(`No YouTube video found for query: ${query}`);
     }
 
-    return { videoId, thumbnailUrl };
+    return { videoId };
   }
 );
