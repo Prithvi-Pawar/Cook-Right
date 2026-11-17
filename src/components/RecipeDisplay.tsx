@@ -2,7 +2,7 @@
 import type { RecipeDataWithImage } from './RecipeGenerator'; // Updated import
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { ClipboardList, ListOrdered, RefreshCw, Youtube } from 'lucide-react'; // Added Youtube icon
+import { ClipboardList, ListOrdered, RefreshCw, Video } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -44,35 +44,24 @@ export function RecipeDisplay({ recipe, originalRecipe, onTranslate, isTranslati
               fill
               className="rounded-lg object-cover"
             />
-          ) : recipe.videoId ? (
-            <iframe
-              className="rounded-lg"
-              width="100%"
-              height="100%"
-              src={`https://www.youtube.com/embed/${recipe.videoId}`}
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            ></iframe>
           ) : (
             <div className="relative h-full w-full rounded-lg bg-slate-200 flex flex-col items-center justify-center text-center p-4 overflow-hidden">
               <Image
                 src="https://images.pexels.com/photos/326281/pexels-photo-326281.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                alt="Find a video on YouTube"
+                alt="Find a recipe video"
                 fill
                 className="opacity-20 object-cover"
               />
               <div className="relative z-10 flex flex-col items-center gap-3">
-                <Youtube className="h-16 w-16 text-red-500" />
+                <Video className="h-16 w-16 text-primary" />
                 <p className="font-semibold text-neutral-700">Find a video walkthrough for this recipe!</p>
                 <Link
-                  href={`https://www.youtube.com/results?search_query=${encodeURIComponent(recipe.recipeName + ' recipe')}`}
+                  href={`https://www.bing.com/videos/search?q=${encodeURIComponent(recipe.recipeName + ' recipe')}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={buttonVariants({ variant: 'destructive' })}
+                  className={buttonVariants({ variant: 'default' })}
                 >
-                  Search on YouTube
+                  Search recipe videos
                 </Link>
               </div>
             </div>

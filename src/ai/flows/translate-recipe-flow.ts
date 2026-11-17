@@ -53,11 +53,6 @@ Original Instructions:
 
 Translate every part of the recipe (name, ingredients, and instructions) accurately into {{targetLanguage}}.
 `,
-  config: {
-    safetySettings: [
-      { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
-    ],
-  },
 });
 
 const translateRecipeFlow = ai.defineFlow(

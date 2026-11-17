@@ -6,7 +6,6 @@ import { generateNamedRecipeFromDescription, type GenerateRecipeOutput as Genera
 import { suggestRecipeNamesFromDescription, type SuggestRecipeNamesFromDescriptionInput, type SuggestRecipeNamesOutput as SuggestRecipeNamesFromDescriptionOutput } from '@/ai/flows/suggest-recipe-names-from-description-flow';
 import { generateNamedRecipeFromIngredients, type GenerateRecipeFromIngredientsOutput, type GenerateNamedRecipeFromIngredientsInput } from '@/ai/flows/generate-recipe-from-ingredients';
 import { suggestRecipeNames, type SuggestRecipeNamesInput, type SuggestRecipeNamesOutput as SuggestRecipeNamesFromIngredientsOutput } from '@/ai/flows/suggest-recipe-names-flow';
-import { getYoutubeVideoForRecipe } from '@/ai/flows/get-youtube-video-for-recipe';
 import { translateRecipe, type TranslateRecipeInput, type TranslateRecipeOutput } from '@/ai/flows/translate-recipe-flow';
 import { RecipeDisplay } from './RecipeDisplay';
 import { RecipeFormTabs, type RecipeFormValues } from './RecipeFormTabs';
@@ -14,11 +13,11 @@ import { LoadingSpinner } from './LoadingSpinner';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Terminal, ArrowLeft, Lightbulb, ChefHat, Youtube } from 'lucide-react';
+import { Terminal, ArrowLeft, Lightbulb, ChefHat, Video } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 
 type BaseRecipeData = GenerateRecipeFromDescriptionOutput | GenerateRecipeFromIngredientsOutput;
-export type RecipeDataWithImage = BaseRecipeData & { imageDataUri?: string; videoId?: string };
+export type RecipeDataWithImage = BaseRecipeData & { imageDataUri?: string };
 
 export function RecipeGenerator() {
   const [isLoading, setIsLoading] = useState(false);
@@ -210,15 +209,6 @@ export function RecipeGenerator() {
         className: "bg-green-100 border-green-400 text-green-700 dark:bg-green-900 dark:border-green-700 dark:text-green-300"
       });
 
-      // Asynchronously fetch the YouTube video without blocking the UI
-      getYoutubeVideoForRecipe({ recipeName: result.recipeName })
-        .then(videoResult => {
-          if (videoResult.videoId) {
-            setRecipeData(prevData => prevData ? { ...prevData, videoId: videoResult.videoId } : null);
-          }
-        })
-        .catch(videoError => console.error("Failed to fetch YouTube video:", videoError));
-
     } catch (e) {
       console.error(e);
       const errorMessage = e instanceof Error ? e.message : "An unexpected error occurred while generating the specific recipe.";
@@ -336,13 +326,13 @@ export function RecipeGenerator() {
             </Button>
             {recipeData?.recipeName && (
               <Link
-                href={`https://www.youtube.com/results?search_query=${encodeURIComponent(recipeData.recipeName + ' recipe')}`}
+                href={`https://www.bing.com/videos/search?q=${encodeURIComponent(recipeData.recipeName + ' recipe')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`${buttonVariants({ variant: 'destructive' })} w-full md:w-auto`}
               >
-                <Youtube className="mr-2 h-5 w-5" />
-                Search on YouTube
+                <Video className="mr-2 h-5 w-5" />
+                Search recipe videos
               </Link>
             )}
           </div>

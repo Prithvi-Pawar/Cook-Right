@@ -55,7 +55,7 @@ export default function LandingPage() {
             <ol className="list-decimal list-inside text-md text-neutral-600 space-y-3 text-left">
               <li>Choose your mode: describe a dish or list ingredients.</li>
               <li>Provide the details and click "Generate Recipe".</li>
-              <li>Our AI crafts a custom recipe, complete with cooking instructions and a video suggestion.</li>
+              <li>Our AI crafts a custom recipe, complete with cooking instructions and a recipe-video search.</li>
               <li>Follow the steps, cook, and enjoy your meal!</li>
             </ol>
           </div>

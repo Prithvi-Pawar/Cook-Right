@@ -60,11 +60,6 @@ Based on the information provided, create a full recipe. The recipe must include
 2.  A complete list of 'ingredients' as an array of strings.
 3.  A series of clear, step-by-step 'instructions' as an array of strings.
 `,
-  config: {
-    safetySettings: [
-      { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
-    ],
-  },
 });
 
 

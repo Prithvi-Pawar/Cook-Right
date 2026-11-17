@@ -1,7 +1,7 @@
 Cook-Right
 ==========
 
-Cook-Right is an AI-driven recipe generation web app. Users can input ingredients, descriptions, or ideas, and the app generates complete recipes, names, and optionally even images for them — all using smart Genkit-powered AI flows.
+Cook-Right is an AI-driven recipe generation web app. Users can input ingredients, descriptions, or ideas, and the app generates complete recipes and names using Genkit flows powered by NVIDIA NIM.
 
 Features
 --------
@@ -41,6 +41,13 @@ Installation:
    cd Cook-Right
 3. Install dependencies
    npm install
+
+NVIDIA NIM setup:
+1. Get an API key from NVIDIA Build.
+2. Set `NVIDIA_API_KEY=your_nvidia_api_key` in the root `.env` file.
+3. Restart the development server after changing the key.
+
+The app uses NVIDIA NIM's OpenAI-compatible API with the `meta/llama-3.3-70b-instruct` model. Recipe-video searches open Bing Videos and do not require a YouTube API key.
 
 Running the Development Server:
    npm run dev

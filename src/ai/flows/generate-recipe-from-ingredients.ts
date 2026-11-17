@@ -51,14 +51,6 @@ Recipe Name: Make sure this matches exactly: "{{selectedRecipeName}}"
 Ingredients: Provide a list of ingredients specifically needed for THIS recipe.
 Instructions: Provide clear, step-by-step instructions.
 `,
-  config: { // Added safety settings as good practice
-    safetySettings: [
-      { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
-      { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-      { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-      { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-    ],
-  }
 });
 
 const generateNamedRecipeFromIngredientsFlow = ai.defineFlow(
