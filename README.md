@@ -47,7 +47,7 @@ NVIDIA NIM setup:
 2. Set `NVIDIA_API_KEY=your_nvidia_api_key` in the root `.env` file.
 3. Restart the development server after changing the key.
 
-The app uses NVIDIA NIM's OpenAI-compatible API with the `meta/llama-3.3-70b-instruct` model. Recipe-video searches open Bing Videos and do not require a YouTube API key.
+The app uses NVIDIA NIM's OpenAI-compatible API with the `nvidia/nemotron-3.5-lightning-30b-a3b` model. Recipe-video searches open Bing Videos and do not require a YouTube API key.
 
 Running the Development Server:
    npm run dev
